@@ -13,6 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py .
 COPY model/ ./model/
 
-EXPOSE 5000  # Not used by this service, but keeping for consistency
+EXPOSE 5000
 
 CMD ["python", "app.py"]
