@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  log-ingest:
+    build: ./log-ingest
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./shared/logs:/app/logs
+    depends_on:
+      - ids
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  ids:
+    build: ./ids
+    volumes:
+      - ./shared/model:/app/model
+      - ./shared/logs:/app/logs
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+
+  alerting:
+    build: ./alerting
+    volumes:
+      - ./shared/alerts:/app/alerts
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - redis
+
+  dashboard:
+    build: ./dashboard
+    ports:
+      - "8080:80"
+    volumes:
+      - ./shared/alerts:/app/alerts
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  shared_logs:
+  shared_model:
+  shared_alerts:

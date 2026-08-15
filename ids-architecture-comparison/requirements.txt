@@ -1,0 +1,8 @@
+# Requirements for ids-architecture-comparison
+pandas>=2.0
+numpy>=1.20
+scikit-learn>=1.0
+xgboost>=2.0
+catboost>=1.0
+matplotlib>=3.0
+seaborn>=0.10
