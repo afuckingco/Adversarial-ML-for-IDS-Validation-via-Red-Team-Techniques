@@ -85,6 +85,10 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 See [ABOUT.md](ABOUT.md) for more information about the project's goals and background.
 
+## 👤 Author
+
+[afuckingco](https://github.com/afuckingco)
+
 ## 📢 Contact
 
 For questions or feedback, please open an issue in this repository.
