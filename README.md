@@ -1,30 +1,51 @@
 # Adversarial ML for IDS Validation via Red-Team Techniques
 
-This repository consolidates all 12 tasks from the S2 thesis research portfolio on adversarial machine learning for Intrusion Detection Systems (IDS).
+This repository contains the complete portfolio of 12 tasks (plus optional tasks) for an S2 thesis research in cybersecurity/TLS fingerprint spoofing detection. It includes:
 
-## Contents
+- Adversarial traffic generator (JA3-randomizing)
+- Aksara Bali OCR demonstration
+- Deep learning anomaly detection fundamentals (CNN, LSTM, Transformer, Autoencoder)
+- IDS architecture comparison (XGBoost, CatBoost, MLP)
+- Threat intelligence aggregator
+- Mini-SoC enterprise architecture (Docker Compose)
+- Network traffic analytics pipeline
+- Paper replication (IDS adversarial)
+- IDS validation SaaS MVP (Flask landing page)
+- IS transformation case study
+- Thesis research design
+- Thesis paper draft (LaTeX and DOCX)
 
-1. `adversarial-traffic-generator/` - CLI for generating network traffic with randomized JA3 fingerprints
-2. `aksara-bali-ocr/` - Simple CNN for Aksara Bali character recognition (demonstration)
-3. `dl-anomaly-detection-fundamentals/` - Implementation of CNN, LSTM, Transformer, Autoencoder for anomaly detection
-4. `ids-architecture-comparison/` - Training and comparison of XGBoost, CatBoost, and MLP models for IDS
-5. `ids-validation-saas-mvp/` - Flask landing page for IDS validation SaaS MVP
-6. `is-transformation-case-study/` - Case study of IDS transformation using adversarial ML techniques
-7. `mini-soc-enterprise-arch/` - Docker Compose architecture for a mini Security Operations Center
-8. `network-traffic-analytics-pipeline/` - ETL pipeline for network traffic data (Parquet format)
-9. `paper-replication-ids-adversarial/` - Replication of an adversarial ML paper on IDS evasion
-10. `thesis-research-design/` - Research design document for the S2 thesis
-11. `threat-intel-aggregator/` - Threat intelligence aggregator with scoring and OSINT feed integration
-12. `model/` - Shared model artifacts (XGBoost model and scaler parameters)
+All tasks are lightweight, zero-cost, and suitable for hardware without CUDA.
 
-## Verification
+## Structure
 
-Each individual task has been verified earlier in the development process. The verification steps for each task are documented in their respective README.md files.
+Each task has its own directory with standard layout:
+- `src/` – source code
+- `data/` – sample or processed data
+- `notebooks/` – Jupyter notebooks (if any)
+- `docs/` – additional documentation
+- `README.md` – task-specific description
 
-## Usage
+## Getting Started
 
-To use any component, navigate to its directory and follow the instructions in its README.md.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques.git
+   cd Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques
+   ```
+
+2. (Optional) Set up virtual environments for each task as needed; many tasks include a `requirements.txt`.
+
+3. Refer to each task's `README.md` for specific instructions.
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+
+## About
+
+See [ABOUT.md](ABOUT.md) for more information about the project's goals and background.
