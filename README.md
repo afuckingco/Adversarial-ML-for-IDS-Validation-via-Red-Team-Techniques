@@ -1,94 +1,230 @@
+```markdown
 # Adversarial ML for IDS Validation via Red-Team Techniques
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![GitHub tag](https://img.shields.io/github/v/tag/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques)](https://github.com/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques/tags)
-[![GitHub issues](https://img.shields.io/github/issues/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques)](https://github.com/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques)](https://github.com/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques/pulls)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Docker](https://img.shields.io/badge/docker-✓-2496ED?logo=docker)](https://www.docker.com/)
+[![Redis](https://img.shields.io/badge/redis-✓-DC382D?logo=redis)](https://redis.io/)
+[![Paper](https://img.shields.io/badge/paper-AETG_2026-blue)](AETG_paper/output/AETG_paper.pdf)
 
-This repository contains the complete portfolio of **12 tasks** (plus optional tasks) for an S2 thesis research in cybersecurity/TLS fingerprint spoofing detection. It includes:
+> **Adaptive Evasion Traffic Generator (AETG): A Framework for Adaptive IDS Validation via Red-Team Techniques**
 
-- **Adversarial traffic generator** – JA3-randomizing HTTP traffic to test IDS evasion.
-- **Aksara Bali OCR demonstration** – Simple CNN for character recognition (portfolio item).
-- **Deep learning anomaly detection fundamentals** – CNN, LSTM, Transformer, Autoencoder implementations.
-- **IDS architecture comparison** – XGBoost, CatBoost, MLP performance comparison.
-- **Threat intelligence aggregator** – OSINT feed collector with scoring.
-- **Mini-SoC enterprise architecture** – Docker‑Compose stack (log‑ingest, IDS, alerting, dashboard, Redis).
-- **Network traffic analytics pipeline** – ETL producing Parquet dataset.
-- **Paper replication (IDS adversarial)** – FGSM attack replication.
-- **IDS validation SaaS MVP** – Flask landing page for a validation service.
-- **IS transformation case study** – Documentation of IDS transformation using adversarial ML.
-- **Thesis research design** – Full research design for the S2 thesis.
-- **Thesis paper draft** – LaTeX source, compiled PDF, and editable DOCX.
+This repository contains the complete implementation and manuscript for the **AETG** framework — a research project that bridges adversarial machine learning theory and network security practice. The framework generates protocol-compliant, adaptively evasive network traffic to stress-test Intrusion Detection Systems (IDS) under realistic threat models.
 
-All tasks are lightweight, zero‑cost, and suitable for hardware without CUDA.
+---
 
-## 📦 Packages & Artifacts
+## 📌 Key Features
 
-| Artifact | Location | Description |
-|----------|----------|-------------|
-| **Python packages** (per task) | `*/requirements.txt` | Minimal dependencies (e.g., `torch`, `flask`, `xgboost`, `scikit-learn`, `redis`). |
-| **Docker images** | `mini-soc-enterprise-arch/` | Built via `docker compose`: `log-ingest`, `ids`, `alerting`, `dashboard`, `redis`. |
-| **Trained model** | `ids-architecture-comparison/xgb_model.json` & `scaler_params.json` | XGBoost model and scaler used in the mini‑SoC IDS service. |
-| **OCR model** | `aksara-bali-ocr/../model/aksara_bali_cnn.pth` | Simple CNN demo model (shared `model/` folder). |
-| **Thesis** | `thesis-paper-draft/main.tex`, `main.pdf`, `thesis.docx` | LaTeX source, compiled PDF, and editable Word document. |
-| **Verification script** | `verify.py` | Checks syntax of all Python files in the repository. |
+- **Protocol-compliant traffic generation** – HTTP, DNS, SSH, C2 beacon with Scapy.
+- **TLS fingerprint randomization** – JA3/JA4 randomization for evading signature-based detection.
+- **Adaptive evasion via LinUCB** – Contextual Multi-Armed Bandit with real-time IDS feedback through Redis.
+- **Evasion Stealth Metric (ESM)** – Quantitative stealth measurement based on Jensen-Shannon Divergence.
+- **Mini-SOC deployment** – Docker Compose stack with Suricata, Redis, alerting, and dashboard.
+- **ML-based detector** – XGBoost classifier for flow-level intrusion detection.
 
-You can pull or build the Docker images locally:
-```bash
-cd mini-soc-enterprise-arch
-docker compose build   # or `docker compose up -d` to run
+---
+
+## 📄 Paper
+
+The manuscript **"Adaptive Evasion Traffic Generator (AETG): A Framework for Adaptive IDS Validation via Red-Team Techniques"** is available in:
+
+| Format | Location |
+|--------|----------|
+| LaTeX source | `AETG_paper/manuscript/AETG_paper.tex` |
+| PDF final | `AETG_paper/output/AETG_paper.pdf` |
+| Word (DOCX) | `AETG_paper/manuscript/AETG_paper.docx` |
+| References | `AETG_paper/manuscript/references.bib` |
+
+**Abstract:** *The increasing adoption of machine learning for network intrusion detection has introduced a critical vulnerability: adversarial examples that can systematically evade detection. AETG unifies protocol-compliant traffic generation, TLS fingerprint randomization, adaptive evasion via LinUCB with real-time IDS feedback, and a rigorous Evasion Stealth Metric. The framework's pipeline was validated in two distinct settings: (1) a calibration environment achieving 96.8% evasion rate, and (2) a mini-SOC deployment where Suricata alerts were confirmed flowing into Redis, while an ML detector achieved recall = 1.0 on adversarial C2 beacon flows.*
+
+---
+
+## 🗂️ Repository Structure
+
+```
+.
+├── AETG_paper/                         # 📄 Paper manuscript & artifacts
+│   ├── manuscript/                     # .tex, .docx, references.bib
+│   ├── figures/                        # Architecture diagram, result plots
+│   ├── tables/                         # LaTeX tables
+│   ├── data/                           # Experiment results (JSON)
+│   ├── notes/                          # Cover letter, highlights, revision notes
+│   └── output/                         # PDF final & LaTeX aux files
+│
+├── code/                               # 🔬 Core implementation
+│   ├── adversarial-traffic-generator/  # AETG framework (Python + Scapy)
+│   │   ├── new_traffic_gen.py          # CLI entry point
+│   │   ├── src/
+│   │   │   ├── traffic_gen.py          # HTTP, DNS, SSH generation
+│   │   │   ├── mab_optimizer.py        # LinUCB implementation
+│   │   │   └── stealth_metric.py       # ESM (Jensen-Shannon Divergence)
+│   │   └── requirements.txt
+│   │
+│   ├── mini-soc-enterprise-arch/       # 🏢 Mini-SOC deployment
+│   │   ├── docker-compose.yml          # Suricata, Redis, alerting, dashboard
+│   │   ├── ids/                        # Suricata configuration
+│   │   ├── alerting/                   # Alert processing service
+│   │   ├── dashboard/                  # Web dashboard (port 8080)
+│   │   ├── mock-endpoint/              # Mock HTTP server (port 8082)
+│   │   └── push_alerts.py              # Redis alert pusher
+│   │
+│   └── experiments/                    # 🧪 Evaluation scripts
+│       ├── eval_ids.py                 # Main evaluation script
+│       ├── adv_training.py             # Adversarial training
+│       └── eval_results.json           # Latest results
+│
+├── other-projects/                     # 📚 Previous/pending research
+│   ├── ids-architecture-comparison/    # XGBoost, CatBoost, MLP comparison
+│   ├── ids-validation-saas-mvp/        # Flask validation service
+│   ├── network-traffic-analytics-pipeline/ # ETL pipeline
+│   ├── paper-replication-ids-adversarial/  # FGSM replication
+│   ├── thesis-paper-draft/             # Thesis LaTeX source
+│   ├── dl-anomaly-detection-fundamentals/
+│   ├── threat-intel-aggregator/
+│   └── ... (other research artifacts)
+│
+├── venv/                               # Python virtual environment
+├── verify.py                           # Syntax verification script
+├── README.md                           # This file
+├── LICENSE                             # MIT License
+└── .gitignore
 ```
 
-## 🏗️ Structure
-
-Each task follows a standard layout:
-- `src/` – source code
-- `data/` – sample or processed data
-- `notebooks/` – Jupyter notebooks (if any)
-- `docs/` – additional documentation
-- `README.md` – task‑specific description
+---
 
 ## 🚀 Getting Started
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques.git
-   cd Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques
-   ```
+### Prerequisites
 
-2. **(Optional) Set up virtual environments**  
-   Many tasks include a `requirements.txt`. Example:
-   ```bash
-   cd ids-architecture-comparison
-   python -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
+- **Python 3.11+** (recommended: use virtual environment)
+- **Docker** and **Docker Compose** (for Mini-SOC)
+- **Redis** (included in Docker Compose)
 
-3. **Run the verification script** (uses only the standard library)
-   ```bash
-   python verify.py
-   ```
+### 1. Clone the repository
 
-4. **Explore individual tasks** – see each folder’s `README.md` for specific instructions.
+```bash
+git clone https://github.com/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques.git
+cd Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques
+```
 
-## 📄 License
+### 2. Set up Python environment
 
-This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+```bash
+python3 -m venv venv
+source venv/bin/activate          # Linux/Mac
+# or venv\Scripts\activate        # Windows
+```
+
+### 3. Install dependencies
+
+```bash
+# For AETG framework
+pip install -r code/adversarial-traffic-generator/requirements.txt
+
+# For experiments
+pip install -r code/experiments/requirements.txt  # if available
+```
+
+---
+
+## 🧪 Running Experiments
+
+### Option A: Start Mini-SOC (Suricata + Redis + Dashboard)
+
+```bash
+cd code/mini-soc-enterprise-arch
+docker compose up -d
+```
+
+- **Suricata IDS** – Sniffs traffic and generates alerts.
+- **Redis** – Stores alerts (`alert:*` keys).
+- **Dashboard** – `http://localhost:8080`
+- **Mock endpoint** – `http://localhost:8082`
+
+### Option B: Run Calibration Experiment (Mock Server, No IDS)
+
+```bash
+cd code/adversarial-traffic-generator
+python new_traffic_gen.py \
+    --url http://localhost:8082 \
+    --attack c2_beacon \
+    --adaptive \
+    --n 1000
+```
+
+### Option C: Run Mini-SOC Evaluation (Suricata + ML Detector)
+
+```bash
+cd code/experiments
+python eval_ids.py \
+    --attack c2_beacon \
+    --benign-flows 500 \
+    --adv-flows 200 \
+    --rate 10 \
+    --redis-host localhost \
+    --redis-port 6379 \
+    --output eval_results.json
+```
+
+### Option D: Push Alerts to Redis (if not automated)
+
+```bash
+cd code/mini-soc-enterprise-arch
+python push_alerts.py &
+```
+
+---
+
+## 📊 Key Results
+
+| Setting | Evasion Rate | ESM (avg) | Adaptation Speed | Note |
+|---------|--------------|-----------|------------------|------|
+| **Calibration** (mock server, no IDS) | **96.8%** | 0.14 | 38 rounds | Bandit behavior characterization |
+| **Mini-SOC** (Suricata + 52k ET rules) | — | — | — | Alert pipeline confirmed functional |
+| **ML Detector** (XGBoost) | **0.0%** | — | — | Recall = 1.0 on 200 adversarial flows |
+
+> **Takeaway:** AETG demonstrates effective evasion in calibration, but the closed-loop feedback with Suricata/ML-derived rewards remains the primary future work. The results highlight that flow-level ML detection can be robust to the TLS- and timing-based strategies explored here.
+
+---
+
+## 🔧 Verification
+
+Run the syntax verification script (uses only standard library):
+
+```bash
+python verify.py
+```
+
+---
 
 ## 🤝 Contributing
 
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+Contributions to improve the framework, add new attack types, or refine the feedback loop are welcome. Please read [CONTRIBUTING.md](AETG_paper/notes/CONTRIBUTING.md) for guidelines.
 
-## ℹ️ About
+---
 
-See [ABOUT.md](ABOUT.md) for more information about the project's goals and background.
+## 📜 License
+
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 👤 Author
 
-[afuckingco](https://github.com/afuckingco)
+**Afiq Andico Pangimpian**  
+- GitHub: [@afuckingco](https://github.com/afuckingco)  
+- Email: [afiqandico13@gmail.com](mailto:afiqandico13@gmail.com)  
+- Affiliation: Institut Teknologi dan Bisnis STIKOM Bali
 
-## 📢 Contact
+---
 
-For questions or feedback, please open an issue in this repository.
+## 🙏 Acknowledgments
+
+- **STIKOM Bali** for supporting this research.
+- **Open-source communities** behind Suricata, Scapy, Redis, XGBoost, and Scikit-learn.
+- Emerging Threats for the Suricata rule set.
+
+---
+
+*Last updated: 19 August 2026*
+```

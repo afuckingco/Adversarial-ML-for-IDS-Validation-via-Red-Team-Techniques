@@ -1,0 +1,39 @@
+## 📄 **10. cover_letter.txt**
+
+[Date: August 20, 2026]
+
+To: The Editors
+Computers & Security
+Elsevier
+
+Subject: Submission of Manuscript — "Adaptive Evasion Traffic Generator (AETG): A Framework for Adaptive IDS Validation via Red-Team Techniques"
+
+Dear Editors,
+
+I am submitting the manuscript entitled "Adaptive Evasion Traffic Generator (AETG): A Framework for Adaptive IDS Validation via Red-Team Techniques" for consideration for publication in Computers & Security.
+
+This manuscript presents a novel framework, AETG, that unifies (1) protocol-compliant traffic generation, (2) TLS fingerprint (JA3/JA4) randomization, (3) adaptive evasion via a contextual Multi-Armed Bandit (LinUCB) with real-time IDS feedback through Redis, and (4) an Evasion Stealth Metric (ESM) based on Jensen-Shannon Divergence.
+
+The framework was validated in two distinct settings:
+1. A calibration environment (mock HTTP server) achieving 96.8% evasion rate.
+2. A mini-SOC deployment (Suricata with 52,415 Emerging Threats rules, Redis alert pipeline) where an XGBoost-based ML detector achieved recall = 1.0 on 200 adversarial C2 beacon flows.
+
+The contributions of this work are:
+- An end-to-end framework for protocol-aware adversarial traffic generation.
+- LinUCB-based adaptive evasion with real-time IDS feedback.
+- A quantitative stealth metric (ESM) based on Jensen-Shannon Divergence.
+- Validation against a production-grade mini-SOC deployment.
+
+This manuscript is original, has not been published previously, and is not under consideration elsewhere. All authors have approved the submission.
+
+We believe this work is particularly well-suited for Computers & Security because it addresses the intersection of adversarial machine learning and network security, a topic of increasing importance to both researchers and practitioners.
+
+I would be happy to address any questions or provide additional information.
+
+Thank you for your consideration.
+
+Sincerely,
+
+Afiq Andico Pangimpian
+Institut Teknologi dan Bisnis STIKOM Bali
+Email: afiqandico13@gmail.com

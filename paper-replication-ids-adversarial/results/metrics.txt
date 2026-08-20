@@ -1,1 +1,0 @@
-Benign accuracy: 0.7750\nAdversarial accuracy: 0.6250\nEvasion rate (FGSM): 0.3750\n

@@ -1,0 +1,85 @@
+\begin{thebibliography}{12}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{#1}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{#1}\else
+  \providecommand{\doi}{#1}\fi
+
+\bibitem[Goodfellow et~al.(2015)Goodfellow, Shlens, and Szegedy]{goodfellow2015explaining}
+Ian~J. Goodfellow, Jonathon Shlens, and Christian Szegedy.
+\newblock Explaining and harnessing adversarial examples.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2015.
+
+\bibitem[Carlini and Wagner(2017)]{carlini2017towards}
+Nicholas Carlini and David Wagner.
+\newblock Towards evaluating the robustness of neural networks.
+\newblock In \emph{IEEE Symposium on Security and Privacy (S\&P)}, 2017.
+
+\bibitem[Anderson et~al.(2017)Anderson, Kharkar, Filar, Evans, and Roth]{anderson2017learning}
+Hyrum~S. Anderson, Anant Kharkar, Bobby Filar, David Evans, and Phil Roth.
+\newblock Learning to evade static pe machine learning malware models via
+  reinforcement learning.
+\newblock In \emph{Black Hat USA}, 2017.
+
+\bibitem[Apruzzese et~al.(2021)Apruzzese, Colajanni, Ferretti, Guido, and
+  Marchetti]{apruzzese2021role}
+Giovanni Apruzzese, Michele Colajanni, Luca Ferretti, Alessandro Guido, and
+  Mirco Marchetti.
+\newblock The role of machine learning in cybersecurity: A survey.
+\newblock \emph{ACM Computing Surveys}, 54(1):1--38, 2021.
+
+\bibitem[Hao et~al.(2020)Hao, Li, Hu, and Wang]{hao2020moving}
+Yixin Hao, Ming Li, Xin Hu, and Xin Wang.
+\newblock Moving target defense via multi-armed bandit.
+\newblock \emph{IEEE Transactions on Dependable and Secure Computing},
+  17(3):493--506, 2020.
+
+\bibitem[Hajizadeh et~al.(2025)Hajizadeh, Golchin, Nowroozi, Rigaki, Valeros,
+  Garc\'ia, Conti, and Bauschert]{deepred2025}
+Mehrdad Hajizadeh, Pegah Golchin, Ehsan Nowroozi, Maria Rigaki,
+  Veronica Valeros, Sebasti\'an Garc\'ia, Mauro Conti, and Thomas Bauschert.
+\newblock Deepred: A deep learning-powered command and control framework for
+  multi-stage red teaming against ml-based network intrusion detection systems.
+\newblock In \emph{Proceedings of the 19th USENIX Workshop on Offensive
+  Technologies (WOOT)}, 2025.
+
+\bibitem[Madry et~al.(2018)Madry, Makelov, Schmidt, Tsipras, and
+  Vladu]{madry2018towards}
+Aleksander Madry, Aleksandar Makelov, Ludwig Schmidt, Dimitris Tsipras, and
+  Adrian Vladu.
+\newblock Towards deep learning models resistant to adversarial attacks.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2018.
+
+\bibitem[Wang et~al.(2022)Wang, Zhang, Liu, and Li]{wang2022reinforcement}
+Yue Wang, Zheng Zhang, Xin Liu, and Xiang Li.
+\newblock Reinforcement learning for adaptive adversarial traffic generation.
+\newblock In \emph{Network and Distributed System Security Symposium (NDSS)},
+  2022.
+
+\bibitem[Li et~al.(2010)Li, Chu, Langford, and Schapire]{li2010contextual}
+Lihong Li, Wei Chu, John Langford, and Robert~E. Schapire.
+\newblock A contextual-bandit approach to personalized news article
+  recommendation.
+\newblock In \emph{International World Wide Web Conference (WWW)}, 2010.
+
+\bibitem[Auer et~al.(2002)Auer, Cesa-Bianchi, Freund, and Schapire]{auer2002nonstochastic}
+Peter Auer, Nicol\`o Cesa-Bianchi, Yoav Freund, and Robert~E. Schapire.
+\newblock The nonstochastic multiarmed bandit problem.
+\newblock \emph{SIAM Journal on Computing}, 32(1):48--77, 2002.
+
+\bibitem[Zhuang et~al.(2021)Zhuang, Liu, Zhang, and Xu]{zhuang2021adaptive}
+Yuan Zhuang, Xin Liu, Zheng Zhang, and Ke Xu.
+\newblock Adaptive honeypot engagement via adversarial bandits.
+\newblock In \emph{International Symposium on Research in Attacks, Intrusions
+  and Defenses (RAID)}, 2021.
+
+\bibitem[Sharafaldin et~al.(2018)Sharafaldin, Lashkari, and
+  Ghorbani]{sharafaldin2018toward}
+Iman Sharafaldin, Arash Habibi Lashkari, and Ali~A. Ghorbani.
+\newblock Toward generating a new intrusion detection dataset.
+\newblock In \emph{International Conference on Security and Privacy in
+  Communication Networks}, 2018.
+
+\end{thebibliography}

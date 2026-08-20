@@ -1,4 +1,0 @@
-torch>=2.0
-flask
-pillow
-numpy

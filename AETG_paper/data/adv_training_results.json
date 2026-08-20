@@ -1,0 +1,20 @@
+{
+  "baseline": {
+    "f1": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "auc": 0.5,
+    "evasion_rate": 1.0
+  },
+  "adversarially_trained": {
+    "f1": 0.9534883720930233,
+    "precision": 1.0,
+    "recall": 0.9111111111111111,
+    "auc": 0.9555555555555555,
+    "evasion_rate": 0.08888888888888889
+  },
+  "n_benign_train": 210,
+  "n_adv_train": 210,
+  "n_benign_test": 90,
+  "n_adv_test": 90
+}
