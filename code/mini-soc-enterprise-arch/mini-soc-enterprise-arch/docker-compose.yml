@@ -1,0 +1,6 @@
+ids:
+  image: some-image
+  container_name: ...
+  environment:
+    - IFACE=eth0   # or something else
+  ...

@@ -1,0 +1,71 @@
+HIGHLIGHTS
+
+Adaptive Evasion Traffic Generator (AETG): A Framework for Adaptive IDS Validation via Red-Team Techniques
+
+Afiq Andico Pangimpian
+Institut Teknologi dan Bisnis STIKOM Bali, Indonesia
+
+KEY CONTRIBUTIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+1. AETG Framework
+   → First unified framework for protocol-compliant, adaptively evasive
+     traffic generation with TLS fingerprint randomization.
+
+2. LinUCB-Based Adaptive Evasion
+   → Contextual Multi-Armed Bandit with real-time IDS feedback via Redis.
+   → Achieves 96.8% evasion rate in calibration environment.
+   → Adapts within 38 rounds (faster than EXP3 at 62 rounds).
+
+3. Evasion Stealth Metric (ESM)
+   → Quantitative stealth metric based on Jensen-Shannon Divergence.
+   → Mean ESM = 0.14 (target < 0.3), indicating high stealth.
+   → TLS-based strategies achieved lowest ESM (0.09–0.11).
+
+4. Mini-SOC Validation
+   → Deployed against real mini-SOC (Suricata + 52,415 ET rules + Redis).
+   → Suricata alert pipeline confirmed functional (alert:* keys in Redis).
+   → XGBoost ML detector achieved recall = 1.0, evasion = 0.0 on 200 flows.
+
+KEY FINDINGS
+═══════════════════════════════════════════════════════════════════════════════
+
+• Calibration Environment (Mock HTTP Server)
+  → 96.8% evasion rate (LinUCB) vs. 100% (random baseline).
+  → Mean ESM = 0.14 (well below target of 0.3).
+  → Adaptation within 38 rounds.
+
+• Mini-SOC Deployment (Suricata + ML Detector)
+  → ML detector (XGBoost): recall = 1.0, evasion = 0.0.
+  → Suricata alert pipeline: functional (alert:* keys observed in Redis).
+  → Zero alert count in eval script = key-pattern mismatch (r.llen vs. r.set).
+
+• Open Items (Future Work)
+  → Fix key-pattern mismatch in eval script.
+  → Complete closed-loop feedback (LinUCB trained on Suricata/ML rewards).
+  → Measure False Positive Impact.
+  → Create proper architecture diagram.
+
+PRACTICAL IMPLICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+→ Signature-based IDS alone is insufficient; ML integration is critical.
+→ JA3/JA4 whitelisting is not a panacea — adversaries can randomize.
+→ Flow-level ML detection can be robust to TLS/timing-based evasion.
+→ AETG provides a realistic, quantifiable red-team testing tool.
+
+KEYWORDS
+═══════════════════════════════════════════════════════════════════════════════
+
+Adversarial Machine Learning · Intrusion Detection Systems ·
+Multi-Armed Bandit · TLS Fingerprinting · Evasion Stealth Metric ·
+Red-Teaming · Suricata · XGBoost · LinUCB · JA3/JA4
+
+STATUS
+═══════════════════════════════════════════════════════════════════════════════
+
+Manuscript submitted to: Computers & Security (Elsevier)
+Date: August 20, 2026
+
+───────
+Contact: Afiq Andico Pangimpian (afiqandico13@gmail.com)
