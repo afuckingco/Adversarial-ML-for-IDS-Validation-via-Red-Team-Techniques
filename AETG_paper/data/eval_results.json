@@ -2,9 +2,9 @@
   "f1": 0.6666666666666666,
   "precision": 0.5,
   "recall": 1.0,
-  "auc": 0.5025,
+  "auc": 0.505,
   "evasion_rate": 0.0,
   "n_benign": 200,
   "n_adversarial": 200,
-  "alert_count_in_redis": 0
+  "alert_count_in_redis": 5
 }

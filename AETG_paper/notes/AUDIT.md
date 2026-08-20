@@ -8,7 +8,7 @@ This document tracks the files and artifacts included in the AETG project, their
 |------|--------|--------------|
 | `AETG_paper.tex` | ✅ Verified | LaTeX source compiles without errors |
 | `AETG_paper.docx` | ✅ Verified | Word version, aligned with LaTeX |
-| `AETG_paper.pdf` | ✅ Verified | Compiled from LaTeX (38 pages) |
+| `AETG_paper.pdf` | ✅ Verified | Compiled from LaTeX (39 pages) |
 | `references.bib` | ✅ Verified | 12 references, all cited in paper |
 | `elsarticle_offline_shim.cls` | ✅ Present | Class file for Elsevier template |
 | `aetg_architecture.png` | ✅ Present | Architecture diagram (text-based placeholder) |
