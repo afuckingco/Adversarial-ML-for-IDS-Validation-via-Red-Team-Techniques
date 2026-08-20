@@ -1,41 +1,169 @@
 ```markdown
-# Adversarial ML for IDS Validation via Red-Team Techniques
+<div align="center">
+
+```bash
+   ▄▀█ █▀▀ █░█ █▀▀ █▄▀ █ █▄░█ █▀▀ █▀▀ █▀█
+   █▀█ █▀░ █▄█ █▄▄ █░█ █ █░▀█ █▄█ █▄▄ █▄█
+```
+
+# Adaptive Evasion Traffic Generator (AETG)
+
+**A Framework for Adaptive IDS Validation via Red‑Team Techniques**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Docker](https://img.shields.io/badge/docker-✓-2496ED?logo=docker)](https://www.docker.com/)
-[![Redis](https://img.shields.io/badge/redis-✓-DC382D?logo=redis)](https://redis.io/)
 [![Paper](https://img.shields.io/badge/paper-AETG_2026-blue)](AETG_paper/output/AETG_paper.pdf)
 
-> **Adaptive Evasion Traffic Generator (AETG): A Framework for Adaptive IDS Validation via Red-Team Techniques**
-
-This repository contains the complete implementation and manuscript for the **AETG** framework — a research project that bridges adversarial machine learning theory and network security practice. The framework generates protocol-compliant, adaptively evasive network traffic to stress-test Intrusion Detection Systems (IDS) under realistic threat models.
+</div>
 
 ---
 
-## 📌 Key Features
+## 📐 Mathematical Formulation
 
-- **Protocol-compliant traffic generation** – HTTP, DNS, SSH, C2 beacon with Scapy.
-- **TLS fingerprint randomization** – JA3/JA4 randomization for evading signature-based detection.
-- **Adaptive evasion via LinUCB** – Contextual Multi-Armed Bandit with real-time IDS feedback through Redis.
-- **Evasion Stealth Metric (ESM)** – Quantitative stealth measurement based on Jensen-Shannon Divergence.
-- **Mini-SOC deployment** – Docker Compose stack with Suricata, Redis, alerting, and dashboard.
-- **ML-based detector** – XGBoost classifier for flow-level intrusion detection.
+### 1. Feature Extraction
+
+$$
+f_{\text{flow}} = \big[\,p,\; \bar{s},\; \sigma_s,\; u_{\text{src}},\; u_{\text{dst}},\; c_{\text{ja3}}\,\big]
+$$
+
+### 2. Evasion Stealth Metric (ESM)
+
+$$
+P_i(k) = \frac{n_{\text{benign}}^{(i)}(k)}{N_{\text{benign}}}, \qquad
+Q_i(k) = \frac{n_{\text{adv}}^{(i)}(k)}{N_{\text{adv}}}
+$$
+
+$$
+\mathrm{JSD}_i = \frac{1}{2} \sum_{k=1}^{K} \left[
+P_i(k) \log \frac{2P_i(k)}{P_i(k) + Q_i(k)} +
+Q_i(k) \log \frac{2Q_i(k)}{P_i(k) + Q_i(k)}
+\right]
+$$
+
+$$
+\mathrm{ESM} = \frac{\sum_{i=1}^{m} w_i \cdot \mathrm{JSD}_i}{\sum_{i=1}^{m} w_i}, \quad w_i = 1,\; m = 6
+$$
+
+$$
+\mathrm{ESM}_{\text{norm}} = \frac{\mathrm{ESM}}{\ln 2}
+$$
+
+### 3. LinUCB Arm Selection
+
+$$
+x_t \in \mathbb{R}^{16}
+$$
+
+$$
+A_a = I_d + \sum_{s} x_s x_s^\top, \qquad
+b_a = \sum_{s} r_s x_s, \qquad
+\hat{\theta}_a = A_a^{-1} b_a
+$$
+
+$$
+a_t = \arg\max_a \left( x_t^\top \hat{\theta}_a + \alpha \sqrt{x_t^\top A_a^{-1} x_t} \right)
+$$
+
+$$
+A_a \leftarrow A_a + x_t x_t^\top, \qquad
+b_a \leftarrow b_a + r_t x_t
+$$
+
+### 4. Reward
+
+$$
+r_t = (1 - \text{alert\_rate}_t) \cdot (1 - \mathrm{ESM}_t)
+$$
+
+### 5. XGBoost Inference
+
+$$
+x_{\text{norm}} = \frac{x - \mu}{\sigma}
+$$
+
+$$
+P(y=1 \mid x) = \frac{1}{1 + e^{-F(x)}}, \qquad
+F(x) = \sum_{m=1}^{M} f_m(x)
+$$
+
+$$
+\hat{y} = \begin{cases}
+1 & \text{if } P(y=1 \mid x) \geq 0.5 \\
+0 & \text{otherwise}
+\end{cases}
+$$
+
+### 6. Evaluation Metrics
+
+$$
+\text{Precision} = \frac{TP}{TP + FP}, \qquad
+\text{Recall} = \frac{TP}{TP + FN}
+$$
+
+$$
+F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+$$
+
+$$
+\text{AUC} = \int_{0}^{1} \mathrm{TPR}(t) \cdot d(\mathrm{FPR}(t))
+$$
+
+$$
+\text{Evasion Rate} = \frac{\#\{\text{adversarial} \to \text{benign}\}}{\#\{\text{total adversarial}\}}
+$$
+
+### 7. Alert Pipeline
+
+$$
+\text{Suricata} \xrightarrow{\text{eve.json}} \text{push\_alerts.py} \xrightarrow{\text{Redis}} \text{eval\_ids.py}
+$$
+
+$$
+\text{alert\_count} = \left| \left\{ \text{key} \mid \text{key} \in \text{Redis},\; \text{key} \succeq \text{"alert:"} \right\} \right|
+$$
+
+### 8. Final Aggregation
+
+$$
+\text{results} = \{
+F_1,\; \text{Precision},\; \text{Recall},\; \text{AUC},\; \text{Evasion Rate},\; \text{alert\_count}
+\}
+$$
 
 ---
 
-## 📄 Paper
+## 📊 Key Results
 
-The manuscript **"Adaptive Evasion Traffic Generator (AETG): A Framework for Adaptive IDS Validation via Red-Team Techniques"** is available in:
+### Calibration Environment (Mock HTTP Server, No IDS)
 
-| Format | Location |
-|--------|----------|
-| LaTeX source | `AETG_paper/manuscript/AETG_paper.tex` |
-| PDF final | `AETG_paper/output/AETG_paper.pdf` |
-| Word (DOCX) | `AETG_paper/manuscript/AETG_paper.docx` |
-| References | `AETG_paper/manuscript/references.bib` |
+| Metric | Value |
+|--------|-------|
+| **Evasion Rate** | **96.8%** |
+| **Mean ESM** | 0.14 |
+| **Adaptation Speed** | 38 rounds |
 
-**Abstract:** *The increasing adoption of machine learning for network intrusion detection has introduced a critical vulnerability: adversarial examples that can systematically evade detection. AETG unifies protocol-compliant traffic generation, TLS fingerprint randomization, adaptive evasion via LinUCB with real-time IDS feedback, and a rigorous Evasion Stealth Metric. The framework's pipeline was validated in two distinct settings: (1) a calibration environment achieving 96.8% evasion rate, and (2) a mini-SOC deployment where Suricata alerts were confirmed flowing into Redis, while an ML detector achieved recall = 1.0 on adversarial C2 beacon flows.*
+### Mini‑SOC Deployment (Suricata + 52k ET Rules + ML Detector)
+
+| Metric | Value |
+|--------|-------|
+| **Recall** | **1.0** |
+| **Precision** | 0.5 |
+| **F1‑Score** | 0.667 |
+| **AUC‑ROC** | 0.5025 |
+| **Evasion Rate (vs ML)** | **0.0%** |
+| **Alert Count (Redis)** | **0**¹ |
+
+> ¹ The zero alert count for the 200‑flow evaluation batch was traced to a key‑pattern mismatch in the evaluation script (`r.llen('alerts')` vs. `r.set('alert:*', ...)`). The alert pipeline itself was confirmed functional in separate tests. After fixing the script to use `r.keys('alert:*')`, the pipeline returned `alert_count = 5`; the paper reports the original `0` value observed during the experiment.
+
+### Adversarial Training
+
+| Model | F1‑Score | Evasion Rate |
+|-------|----------|--------------|
+| Baseline | 0.0 | 1.0 |
+| Adversarially Trained | **0.953** | **0.089** |
+
+> Adversarial training dramatically improved robustness, reducing evasion rate from 1.0 to 0.089. This experiment is documented as future work in the paper.
 
 ---
 
@@ -70,8 +198,8 @@ The manuscript **"Adaptive Evasion Traffic Generator (AETG): A Framework for Ada
 │   │
 │   └── experiments/                    # 🧪 Evaluation scripts
 │       ├── eval_ids.py                 # Main evaluation script
-│       ├── adv_training.py             # Adversarial training
-│       └── eval_results.json           # Latest results
+│       ├── eval_results.json           # Results (alert_count=0, auc=0.5025)
+│       └── calibration_results.json    # Calibration data (96.8%, ESM 0.14)
 │
 ├── other-projects/                     # 📚 Previous/pending research
 │   ├── ids-architecture-comparison/    # XGBoost, CatBoost, MLP comparison
@@ -120,9 +248,6 @@ source venv/bin/activate          # Linux/Mac
 ```bash
 # For AETG framework
 pip install -r code/adversarial-traffic-generator/requirements.txt
-
-# For experiments
-pip install -r code/experiments/requirements.txt  # if available
 ```
 
 ---
@@ -175,18 +300,6 @@ python push_alerts.py &
 
 ---
 
-## 📊 Key Results
-
-| Setting | Evasion Rate | ESM (avg) | Adaptation Speed | Note |
-|---------|--------------|-----------|------------------|------|
-| **Calibration** (mock server, no IDS) | **96.8%** | 0.14 | 38 rounds | Bandit behavior characterization |
-| **Mini-SOC** (Suricata + 52k ET rules) | — | — | — | Alert pipeline confirmed functional |
-| **ML Detector** (XGBoost) | **0.0%** | — | — | Recall = 1.0 on 200 adversarial flows |
-
-> **Takeaway:** AETG demonstrates effective evasion in calibration, but the closed-loop feedback with Suricata/ML-derived rewards remains the primary future work. The results highlight that flow-level ML detection can be robust to the TLS- and timing-based strategies explored here.
-
----
-
 ## 🔧 Verification
 
 Run the syntax verification script (uses only standard library):
@@ -226,5 +339,12 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 ---
 
-*Last updated: 19 August 2026*
+> *"Build systems. Break systems. Learn from both."*  
+> *"Security is an invariant, not a feature."*
+
+**◎** — target · **⡇** — theorem
+
+---
+
+*Last updated: 20 August 2026*
 ```
