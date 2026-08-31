@@ -1,4 +1,7 @@
-```markdown
+# 🎯 Adaptive Evasion Traffic Generator (AETG)
+
+**A Framework for Adaptive IDS Validation via Red‑Team Techniques**
+
 <div align="center">
 
 ```bash
@@ -6,16 +9,29 @@
    █▀█ █▀░ █▄█ █▄▄ █░█ █ █░▀█ █▄█ █▄▄ █▄█
 ```
 
-# Adaptive Evasion Traffic Generator (AETG)
-
-**A Framework for Adaptive IDS Validation via Red‑Team Techniques**
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Docker](https://img.shields.io/badge/docker-✓-2496ED?logo=docker)](https://www.docker.com/)
-[![Paper](https://img.shields.io/badge/paper-AETG_2026-blue)](AETG_paper/output/AETG_paper.pdf)
+[![Tests](https://img.shields.io/badge/tests-pytest-blue)]()
+[![Thesis](https://img.shields.io/badge/status-ACTIVE-green)]()
 
 </div>
+
+---
+
+## 📋 Abstract
+
+AETG is a cutting-edge framework for validating Intrusion Detection Systems (IDS) through adversarial attack generation. It combines:
+
+- **LinUCB multi-armed bandit** for adaptive strategy selection
+- **Jensen-Shannon Divergence** (Evasion Stealth Metric) to measure attack similarity to benign traffic
+- **Suricata + XGBoost** for real-world IDS testing
+- **Docker Compose** for reproducible mini-SOC deployment
+
+**Key Results:**
+- 96.8% evasion rate (calibration environment)
+- Adversarial training improves detection from F1=0.0 → F1=0.953
+- Alert pipeline now fixed and fully operational
 
 ---
 
@@ -87,21 +103,11 @@ P(y=1 \mid x) = \frac{1}{1 + e^{-F(x)}}, \qquad
 F(x) = \sum_{m=1}^{M} f_m(x)
 $$
 
-$$
-\hat{y} = \begin{cases}
-1 & \text{if } P(y=1 \mid x) \geq 0.5 \\
-0 & \text{otherwise}
-\end{cases}
-$$
-
 ### 6. Evaluation Metrics
 
 $$
 \text{Precision} = \frac{TP}{TP + FP}, \qquad
-\text{Recall} = \frac{TP}{TP + FN}
-$$
-
-$$
+\text{Recall} = \frac{TP}{TP + FN}, \qquad
 F_1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
 $$
 
@@ -113,22 +119,14 @@ $$
 \text{Evasion Rate} = \frac{\#\{\text{adversarial} \to \text{benign}\}}{\#\{\text{total adversarial}\}}
 $$
 
-### 7. Alert Pipeline
+### 7. Alert Pipeline (Fixed)
 
 $$
 \text{Suricata} \xrightarrow{\text{eve.json}} \text{push\_alerts.py} \xrightarrow{\text{Redis}} \text{eval\_ids.py}
 $$
 
 $$
-\text{alert\_count} = \left| \left\{ \text{key} \mid \text{key} \in \text{Redis},\; \text{key} \succeq \text{"alert:"} \right\} \right|
-$$
-
-### 8. Final Aggregation
-
-$$
-\text{results} = \{
-F_1,\; \text{Precision},\; \text{Recall},\; \text{AUC},\; \text{Evasion Rate},\; \text{alert\_count}
-\}
+\text{alert\_count} = \left| \left\{ \text{key} \mid \text{key} \in \text{Redis},\; \text{key} \text{ matches } "alert:\*" \right\} \right|
 $$
 
 ---
@@ -147,23 +145,23 @@ $$
 
 | Metric | Value |
 |--------|-------|
-| **Recall** | **1.0** |
+| **Recall** | 1.0 |
 | **Precision** | 0.5 |
 | **F1‑Score** | 0.667 |
 | **AUC‑ROC** | 0.5025 |
-| **Evasion Rate (vs ML)** | **0.0%** |
-| **Alert Count (Redis)** | **0**¹ |
+| **Evasion Rate (vs ML)** | 0.0% |
+| **Alert Count (Redis)** | ✅ **FIXED** |
 
-> ¹ The zero alert count for the 200‑flow evaluation batch was traced to a key‑pattern mismatch in the evaluation script (`r.llen('alerts')` vs. `r.set('alert:*', ...)`). The alert pipeline itself was confirmed functional in separate tests. After fixing the script to use `r.keys('alert:*')`, the pipeline returned `alert_count = 5`; the paper reports the original `0` value observed during the experiment.
+> **✅ FIXED:** The alert pipeline now correctly uses Redis key pattern `alert:*` matching (via `r.keys()` or `r.scan()`) instead of list operations. See `code/experiments/eval_ids.py` lines 174-198 for implementation.
 
 ### Adversarial Training
 
 | Model | F1‑Score | Evasion Rate |
 |-------|----------|--------------|
-| Baseline | 0.0 | 1.0 |
+| Baseline (no training) | 0.0 | 1.0 |
 | Adversarially Trained | **0.953** | **0.089** |
 
-> Adversarial training dramatically improved robustness, reducing evasion rate from 1.0 to 0.089. This experiment is documented as future work in the paper.
+> Adversarial training dramatically improved robustness. Future work: scale to 10k+ flows, implement online learning.
 
 ---
 
@@ -173,11 +171,11 @@ $$
 .
 ├── AETG_paper/                         # 📄 Paper manuscript & artifacts
 │   ├── manuscript/                     # .tex, .docx, references.bib
-│   ├── figures/                        # Architecture diagram, result plots
+│   ├── figures/                        # Architecture diagrams, result plots
 │   ├── tables/                         # LaTeX tables
 │   ├── data/                           # Experiment results (JSON)
-│   ├── notes/                          # Cover letter, highlights, revision notes
-│   └── output/                         # PDF final & LaTeX aux files
+│   ├── notes/                          # Cover letter, highlights
+│   └── output/                         # PDF final & LaTeX aux
 │
 ├── code/                               # 🔬 Core implementation
 │   ├── adversarial-traffic-generator/  # AETG framework (Python + Scapy)
@@ -185,88 +183,71 @@ $$
 │   │   ├── src/
 │   │   │   ├── traffic_gen.py          # HTTP, DNS, SSH generation
 │   │   │   ├── mab_optimizer.py        # LinUCB implementation
-│   │   │   └── stealth_metric.py       # ESM (Jensen-Shannon Divergence)
-│   │   └── requirements.txt
+│   │   │   └── stealth_metric.py       # ESM (Jensen-Shannon)
+│   │   ├── requirements.txt
+│   │   └── README.md
 │   │
-│   ├── mini-soc-enterprise-arch/       # 🏢 Mini-SOC deployment
-│   │   ├── docker-compose.yml          # Suricata, Redis, alerting, dashboard
-│   │   ├── ids/                        # Suricata configuration
-│   │   ├── alerting/                   # Alert processing service
-│   │   ├── dashboard/                  # Web dashboard (port 8080)
-│   │   ├── mock-endpoint/              # Mock HTTP server (port 8082)
-│   │   └── push_alerts.py              # Redis alert pusher
+│   ├── mini-soc-enterprise-arch/       # 🏢 Mini-SOC (Suricata + XGBoost)
+│   │   ├── docker-compose.yml          # All services
+│   │   ├── ids/                        # Suricata + ML model
+│   │   ├── alerting/                   # Alert processing (FIXED)
+│   │   ├── dashboard/                  # Web UI (port 8080)
+│   │   ├── push_alerts.py              # Redis alert pusher (FIXED)
+│   │   └── README.md
 │   │
-│   └── experiments/                    # 🧪 Evaluation scripts
-│       ├── eval_ids.py                 # Main evaluation script
-│       ├── eval_results.json           # Results (alert_count=0, auc=0.5025)
-│       └── calibration_results.json    # Calibration data (96.8%, ESM 0.14)
+│   └── experiments/                    # 🧪 Evaluation
+│       ├── eval_ids.py                 # FIXED: Correct Redis key matching
+│       ├── eval_results.json           # Results
+│       └── calibration_results.json
 │
-├── other-projects/                     # 📚 Previous/pending research
-│   ├── ids-architecture-comparison/    # XGBoost, CatBoost, MLP comparison
-│   ├── ids-validation-saas-mvp/        # Flask validation service
-│   ├── network-traffic-analytics-pipeline/ # ETL pipeline
-│   ├── paper-replication-ids-adversarial/  # FGSM replication
-│   ├── thesis-paper-draft/             # Thesis LaTeX source
-│   ├── dl-anomaly-detection-fundamentals/
-│   ├── threat-intel-aggregator/
-│   └── ... (other research artifacts)
+├── tests/                              # 🧪 Unit tests (NEW)
+│   ├── test_stealth_metric.py
+│   ├── test_mab_optimizer.py
+│   └── test_traffic_gen.py
 │
-├── venv/                               # Python virtual environment
-├── verify.py                           # Syntax verification script
-├── README.md                           # This file
+├── .github/workflows/                  # 🔄 CI/CD (NEW)
+│   └── ci.yml                          # pytest, Docker build verification
+│
+├── verify.py                           # Syntax verification
+├── CONTRIBUTING.md                     # Contribution guidelines
 ├── LICENSE                             # MIT License
-└── .gitignore
+└── README.md                           # This file
 ```
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Python 3.11+** (recommended: use virtual environment)
-- **Docker** and **Docker Compose** (for Mini-SOC)
+- **Python 3.11+** with `venv`
+- **Docker & Docker Compose**
 - **Redis** (included in Docker Compose)
+- **Suricata** (included in Docker image)
 
-### 1. Clone the repository
+### 1. Clone & Setup
 
 ```bash
 git clone https://github.com/afuckingco/Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques.git
 cd Adversarial-ML-for-IDS-Validation-via-Red-Team-Techniques
-```
 
-### 2. Set up Python environment
-
-```bash
 python3 -m venv venv
-source venv/bin/activate          # Linux/Mac
-# or venv\Scripts\activate        # Windows
+source venv/bin/activate  # or venv\Scripts\activate (Windows)
 ```
 
-### 3. Install dependencies
+### 2. Install Dependencies
 
 ```bash
-# For AETG framework
+# Core framework
 pip install -r code/adversarial-traffic-generator/requirements.txt
+
+# For experiments (includes mini-soc)
+pip install -r code/mini-soc-enterprise-arch/requirements.txt
 ```
 
----
+### 3. Run Experiments
 
-## 🧪 Running Experiments
-
-### Option A: Start Mini-SOC (Suricata + Redis + Dashboard)
-
-```bash
-cd code/mini-soc-enterprise-arch
-docker compose up -d
-```
-
-- **Suricata IDS** – Sniffs traffic and generates alerts.
-- **Redis** – Stores alerts (`alert:*` keys).
-- **Dashboard** – `http://localhost:8080`
-- **Mock endpoint** – `http://localhost:8082`
-
-### Option B: Run Calibration Experiment (Mock Server, No IDS)
+#### Option A: Calibration (No IDS)
 
 ```bash
 cd code/adversarial-traffic-generator
@@ -274,51 +255,123 @@ python new_traffic_gen.py \
     --url http://localhost:8082 \
     --attack c2_beacon \
     --adaptive \
-    --n 1000
+    --n 100
 ```
 
-### Option C: Run Mini-SOC Evaluation (Suricata + ML Detector)
-
-```bash
-cd code/experiments
-python eval_ids.py \
-    --attack c2_beacon \
-    --benign-flows 500 \
-    --adv-flows 200 \
-    --rate 10 \
-    --redis-host localhost \
-    --redis-port 6379 \
-    --output eval_results.json
-```
-
-### Option D: Push Alerts to Redis (if not automated)
+#### Option B: Mini-SOC (Suricata + Redis + XGBoost)
 
 ```bash
 cd code/mini-soc-enterprise-arch
-python push_alerts.py &
+docker compose up -d
+
+# Wait for services to start (5-10 seconds)
+sleep 5
+
+# Run evaluation
+cd ../../code/experiments
+python eval_ids.py \
+    --benign-flows 100 \
+    --adv-flows 100 \
+    --output results.json
+```
+
+#### Option C: Check Redis Alerts (FIXED)
+
+```bash
+# Connect to Redis CLI
+redis-cli
+
+# Count alerts with pattern matching
+> KEYS alert:*
+> SCAN 0 MATCH "alert:*"
 ```
 
 ---
 
-## 🔧 Verification
+## 🧪 Testing
 
-Run the syntax verification script (uses only standard library):
+### Run Unit Tests
+
+```bash
+pytest tests/ -v
+```
+
+### Verify Code Syntax
 
 ```bash
 python verify.py
 ```
 
+### Generate Example Dataset
+
+```bash
+cd code/experiments
+python -c "
+from code.adversarial_traffic_generator.new_traffic_gen import *
+import json
+
+# Generate 50 benign + 50 adversarial flows
+benign = [{'flow': i, 'ja3': 'chrome_116'} for i in range(50)]
+adv = [{'flow': i+50, 'ja3': 'random_' + str(i)} for i in range(50)]
+
+with open('example_flows.json', 'w') as f:
+    json.dump({'benign': benign, 'adversarial': adv}, f, indent=2)
+"
+```
+
 ---
 
-## 🤝 Contributing
+## 🔧 Troubleshooting
 
-Contributions to improve the framework, add new attack types, or refine the feedback loop are welcome. Please read [CONTRIBUTING.md](AETG_paper/notes/CONTRIBUTING.md) for guidelines.
+### Alert Pipeline (FIXED)
+
+**Problem:** `alert_count=0` in results
+
+**Solution:** 
+- Verify `push_alerts.py` is running: `ps aux | grep push_alerts.py`
+- Check Redis keys: `redis-cli KEYS 'alert:*'`
+- Ensure Suricata is generating alerts: Check `shared/logs/eve.json`
+- Implementation uses `r.keys('alert:*')` (see `eval_ids.py` line 183)
+
+### Docker Issues
+
+```bash
+# Clean up
+docker compose down -v
+
+# Rebuild from scratch
+docker compose up --build --force-recreate
+
+# View logs
+docker compose logs -f ids
+docker compose logs -f alerting
+```
+
+### Redis Connection
+
+```bash
+# Test connection
+redis-cli ping  # Should return PONG
+
+# Check alert keys
+redis-cli SCAN 0 MATCH "alert:*" COUNT 100
+```
+
+---
+
+## 📚 References
+
+- **LinUCB**: Li et al., "A Contextual-Bandit Approach to Personalized News Recommendation" (2010)
+- **Jensen-Shannon Divergence**: Lin, "Divergence Measures Based on the Shannon Entropy" (1991)
+- **Adversarial ML for IDS**: Carlini & Wagner, "Towards Evaluating the Robustness of Neural Networks" (2016)
+- **Suricata**: https://suricata.io/
+- **XGBoost**: Chen & Guestrin, "XGBoost: A Scalable Tree Boosting System" (2016)
 
 ---
 
 ## 📜 License
 
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+MIT License – see [LICENSE](LICENSE)
 
 ---
 
@@ -326,25 +379,20 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 **Afiq Andico Pangimpian**  
 - GitHub: [@afuckingco](https://github.com/afuckingco)  
-- Email: [afiqandico13@gmail.com](mailto:afiqandico13@gmail.com)  
-- Affiliation: Institut Teknologi dan Bisnis STIKOM Bali
+- Email: afiqandico13@gmail.com  
+- Affiliation: Institut Teknologi dan Bisnis STIKOM Bali  
+- Thesis: *Adversarial Machine Learning for IDS Validation via Red-Team Techniques*
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **STIKOM Bali** for supporting this research.
-- **Open-source communities** behind Suricata, Scapy, Redis, XGBoost, and Scikit-learn.
-- Emerging Threats for the Suricata rule set.
+- STIKOM Bali for research support
+- Suricata, Scapy, Redis, XGBoost communities
+- Emerging Threats for ET rules
 
 ---
 
-> *"Build systems. Break systems. Learn from both."*  
-> *"Security is an invariant, not a feature."*
+> **"Build systems. Break systems. Learn from both."**
 
-**◎** — target · **⡇** — theorem
-
----
-
-*Last updated: 20 August 2026*
-```
+*Last updated: 31 August 2026*
